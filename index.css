@@ -1,8 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-size: 16px;
+    color: black;
+}
+
+h1 {
+    text-align: center;
+    background-color: teal;
+    font-size: 3rem;
+    margin: 1rem 0;
+
+}
+
+#game-control {
+    background-color: thistle;
+    width: 50rem;
+    max-width: 90vw;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#newgame-btn {
+    margin: 1rem auto;
+}
+
+#player-selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.player-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.choose-mark {
+    margin-top: 1.5rem;
+}
+
+.player-mark {
+    height: 3rem;
+    width: 3rem;
+    margin: 0.5rem 0;
+}
+
 #board {
     background-color: black;
     width: 30rem;
     height: 30rem;
     margin: 0 auto;
+    margin-top: 1rem;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
@@ -11,7 +65,14 @@
     border-width: 0.75rem;
 }
 
-.game-btn {
+.game-spot {
     border-radius: 0;
     border: none;
+    font-size: 6rem;
+    font-weight: bold;
+    color: black;
+}
+
+.game-spot:hover {
+    background-color: rgb(219, 219, 186);
 }

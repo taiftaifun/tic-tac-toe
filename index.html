@@ -2,16 +2,34 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <h1>TIC-TAC-TOE</h1>
+    <div id="game-control">
+        <button id="newgame-btn">NEW GAME</button>
+        <div id="player-selection">
+            <div class="player-input" id="player-one">
+                <p>PLAYER ONE</p>
+                <input type="text" placeholder="Enter your name...">
+                <p class="choose-mark">CHOOSE YOUR MARK</p>
+                <button class="player-mark" id="player-one-mark"></button>
+            </div>
+            <div class="player-input" id="player-two">
+                <p>PLAYER TWO</p>
+                <input type="text" placeholder="Enter your name...">
+                <p class="choose-mark">CHOOSE YOUR MARK</p>
+                <button class="player-mark" id="player-two-mark"></button>
+            </div>
+        </div>
+    </div>
     <div id="board">
-        <button class="game-btn" id="1"></button>
-        <button class="game-btn" id="2"></button>
-        <button class="game-btn" id="3"></button>
-        <button class="game-btn" id="4"></button>
-        <button class="game-btn" id="5"></button>
-        <button class="game-btn" id="6"></button>
-        <button class="game-btn" id="7"></button>
-        <button class="game-btn" id="8"></button>
-        <button class="game-btn" id="9"></button>        
+        <button class="game-spot" id="0"></button>
+        <button class="game-spot" id="1"></button>
+        <button class="game-spot" id="2"></button>
+        <button class="game-spot" id="3"></button>
+        <button class="game-spot" id="4"></button>
+        <button class="game-spot" id="5"></button>
+        <button class="game-spot" id="6"></button>
+        <button class="game-spot" id="7"></button>
+        <button class="game-spot" id="8"></button>        
     </div>
 </body>
 
