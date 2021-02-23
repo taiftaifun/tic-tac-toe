@@ -1,51 +1,41 @@
-const Player = (name, number, selection) => {
-    const switchMark = () => {
-        let otherPlayer;
-        if(number == 1) {
-            otherPlayer = playerTwo;
-        } else if(number == 2) {
-            otherPlayer = playerOne;
-        }
-        
-        if(selection == undefined) {
-            selection = "X";
-            otherPlayer.selection = "O";
-        } else if(selection == "X") {
-            selection = "O";
-            otherPlayer.selection = "X";
-        } else if(selection == "O") {
-            selection = "X";
-            otherPlayer.selection = "O";
-        }       
-        playerOneMark.textContent = selection;
-        playerTwoMark.textContent = otherPlayer.selection;      
-    }
-
-    const addMark = (e) => {
-        e.target.textContent = selection;
-        gameBoardArr[e.target.id] = selection;
-    }
-
-    return {switchMark, addMark}
-}
-
-const playerOne = Player("Player One", 1);
-const playerTwo = Player("Player Two", 2);
-
 const gameSpots = Array.from(document.querySelectorAll(".game-spot"));
-gameSpots.forEach(spot => addEventListener("click", playerOne.addMark))
-const playerOneMark = document.querySelector("#player-one-mark");
-playerOneMark.addEventListener("click", playerOne.switchMark);
-const playerTwoMark = document.querySelector("#player-two-mark");
-playerTwoMark.addEventListener("click", playerTwo.switchMark);
-let gameBoardArr = ["", "", "", "", "", "", "", "", ""]
+const newGameBtn = document.querySelector("#newgame-btn");
 
-function renderBoard(boardArr) {
-    gameSpots.forEach(spot => {
-        spot.textContent = boardArr[spot.id];
-    })
+const gameboard = (() => {
+    const boardArr = ["", "", "", "", "", "", "", "", ""];
+    const renderBoard = () => {
+        gameSpots.forEach(spot => {
+            spot.textContent = boardArr[spot.id];
+        });
+    }
+    return {renderBoard, boardArr}; 
+})();
+
+const Player = (number, selection) => {
+    const addMark = (e) => {
+        gameboard.boardArr[e.target.id] = selection;
+    }
+    return {addMark, selection};
 }
 
-renderBoard(gameBoardArr);
-
+const gameflow = (() => {
+    const playerOne = Player(1, "X");
+    const playerTwo = Player(2, "O");
+    let activePlayer = playerOne;
+    const switchPlayers = () => {
+        if(activePlayer == playerOne) {
+            activePlayer = playerTwo;
+        } else if(activePlayer == playerTwo) {
+            activePlayer == playerOne;
+        }
+    }
+    gameSpots.forEach(spot => {
+        spot.addEventListener("click", (e) => {
+            activePlayer.addMark(e);
+            gameboard.renderBoard();
+            switchPlayers();
+        });
+    })
+    return {activePlayer};
+})();
 
