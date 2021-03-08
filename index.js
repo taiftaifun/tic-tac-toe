@@ -13,9 +13,11 @@ const gameboard = (() => {
 
     const wipeBoard = () => {
         boardArray = boardArray.map(item => "");
+        winner = undefined;
+        gameSpots.forEach(spot => spot.disabled = false);
     }
 
-    const winningCombinations = [
+    const winningCombinationsArray = [
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
@@ -26,6 +28,9 @@ const gameboard = (() => {
         [2, 4, 6]
     ]
     
+    const winningCombinationsStr = winningCombinationsArray.map(item => String(item));
+
+    let winner;
     const winnerCheck = () => {
         let xIndices = boardArray.map((item, index) => {
             if(item == "X") {
@@ -39,13 +44,21 @@ const gameboard = (() => {
             }
         });
 
-        xIndices = xIndices.filter(element => element != undefined).sort();
-        oIndices = oIndices.filter(element => element != undefined).sort();
-
-        console.log(xIndices);
-        console.log(oIndices);
-
-        // NEED TO FIGURE OUT THE LOGIC TO FIGURE OUT THE WINNER AS SOON AS IT HAPPENS
+        xIndices = String(xIndices.filter(element => element != undefined).sort());
+        oIndices = String(oIndices.filter(element => element != undefined).sort());
+        winningCombinationsStr.forEach(combination => {
+            if(xIndices.includes(combination)) {
+                winner = "Player One (X)";
+            } else if(oIndices.includes(combination)) {
+                winner = "Player Two (O)";
+            }
+        });
+        if(winner != undefined) {
+            alert(`The winner is ${winner}!`);
+            gameSpots.forEach(spot => spot.disabled = true);
+        } else if(winner == undefined && !boardArray.includes("")) {
+            alert(`It's a tie!`);
+        }
     }
 
     return {renderBoard, updateBoardArray, wipeBoard, winnerCheck};
