@@ -22,11 +22,12 @@ h1 {
     max-width: 90vw;
     margin: 0 auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
-#newgame-btn {
+#newgame-btn, #gamemode-btn {
     margin: 1rem auto;
+    width: 15rem;
 }
 
 #board {

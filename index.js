@@ -1,5 +1,6 @@
 const gameSpots = Array.from(document.querySelectorAll(".game-spot"));
 const newGameBtn = document.querySelector("#newgame-btn");
+const gamemodeBtn = document.querySelector("#gamemode-btn");
 
 const gameboard = (() => {
     let boardArray = ["", "", "", "", "", "", "", "", ""];
@@ -61,18 +62,42 @@ const gameboard = (() => {
         }
     }
 
-    return {renderBoard, updateBoardArray, wipeBoard, winnerCheck};
+    let availableSpots = () => {
+        avSpot = boardArray
+        .map((spot, index) =>  {
+            if(spot == "") {
+                return index;
+            }
+        })
+        .filter(item => item != undefined);
+        return avSpot;
+    }
+
+    return {renderBoard, updateBoardArray, wipeBoard, winnerCheck, availableSpots};
 })();
 
-const Player = (mark) => {
+const Player = (mark, human) => {
     const getMark = () => mark;
     return {getMark};
 }
 
 const flowControl = (() => {
+    let gamemode = gamemodeBtn.textContent;
+    const switchMode = () => {
+        if(gamemode == "PLAYER VS PLAYER") {
+            gamemode = "PLAYER VS COMPUTER";
+        } else if(gamemode == "PLAYER VS COMPUTER") {
+            gamemode = "PLAYER VS PLAYER";
+        }
+        gamemodeBtn.textContent = gamemode;
+        console.log(gamemode);
+    }
+    gamemodeBtn.addEventListener("click", switchMode);
+    
     const playerOne = Player("X");
     const playerTwo = Player("O");
     let activePlayer = playerOne;
+    
     const switchPlayer = () => {
         if(activePlayer == playerOne) {
             activePlayer = playerTwo;
@@ -87,7 +112,13 @@ const flowControl = (() => {
             gameboard.updateBoardArray(targetedDiv.id, activePlayer.getMark());
             gameboard.renderBoard();
             gameboard.winnerCheck();
-            switchPlayer();
+            console.log(gamemode);
+            // idk why the mode keeps switching back to pvp even when pvc is on
+            if(gamemode = "PLAYER VS PLAYER") {
+                switchPlayer();
+            } else if(gamemode == "PLAYER VS COMPUTER") {
+                aiModule.makemove();
+            }
         }
     }
 
@@ -99,6 +130,17 @@ const flowControl = (() => {
 
     return {addMark, newGame};
 })();
+
+const aiModule = (() => {
+    const makemove = () => {
+        let availableSpots = gameboard.availableSpots();
+        let selectedSpotIndex = availableSpots[Math.floor(Math.random() * availableSpots.length)];
+        gameboard.updateBoardArray(selectedSpotIndex, "O");
+        return availableSpots;
+    }
+    return {makemove};
+})()
+
 
 gameSpots.forEach(spot => spot.addEventListener("click", flowControl.addMark));
 newGameBtn.addEventListener("click", flowControl.newGame);
