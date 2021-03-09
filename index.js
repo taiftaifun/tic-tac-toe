@@ -4,6 +4,11 @@ const gamemodeBtn = document.querySelector("#gamemode-btn");
 
 const gameboard = (() => {
     let boardArray = ["", "", "", "", "", "", "", "", ""];
+    
+    const printBoard = () => {
+        console.log(boardArray);
+    }
+
     const updateBoardArray = (spot, mark) => {
         boardArray[spot] = mark;
     }
@@ -18,6 +23,7 @@ const gameboard = (() => {
         gameSpots.forEach(spot => spot.disabled = false);
     }
 
+    // combinations of the same mark (X or O) on a board that warrant a victory
     const winningCombinationsArray = [
         [0, 1, 2],
         [3, 4, 5],
@@ -28,11 +34,12 @@ const gameboard = (() => {
         [0, 4, 8],
         [2, 4, 6]
     ]
-    
+    // converted to string in order to compare with selections made by players
     const winningCombinationsStr = winningCombinationsArray.map(item => String(item));
 
-    let winner;
-    const winnerCheck = () => {
+    // function checking whether, based on board, there is a winner
+    const winnerCheck = () => {    
+        let winner;
         let xIndices = boardArray.map((item, index) => {
             if(item == "X") {
                 return index;
@@ -62,6 +69,7 @@ const gameboard = (() => {
         }
     }
 
+    // generate an array of unoccupied spots on the board
     let availableSpots = () => {
         avSpot = boardArray
         .map((spot, index) =>  {
@@ -73,16 +81,20 @@ const gameboard = (() => {
         return avSpot;
     }
 
-    return {renderBoard, updateBoardArray, wipeBoard, winnerCheck, availableSpots};
+    return {renderBoard, updateBoardArray, wipeBoard, winnerCheck, availableSpots, printBoard};
 })();
 
-const Player = (mark, human) => {
+// factory function for players
+const Player = (mark) => {
     const getMark = () => mark;
     return {getMark};
 }
 
+// module for the control of the game flow
 const flowControl = (() => {
-    let gamemode = gamemodeBtn.textContent;
+    // section controlling the pvp and pvc modes
+    /* THIS NEEDS SOME WORK */
+    let gamemode = "PLAYER VS COMPUTER";
     const switchMode = () => {
         if(gamemode == "PLAYER VS PLAYER") {
             gamemode = "PLAYER VS COMPUTER";
@@ -90,14 +102,15 @@ const flowControl = (() => {
             gamemode = "PLAYER VS PLAYER";
         }
         gamemodeBtn.textContent = gamemode;
-        console.log(gamemode);
     }
     gamemodeBtn.addEventListener("click", switchMode);
     
+    // create the players, "X" is always first
     const playerOne = Player("X");
     const playerTwo = Player("O");
     let activePlayer = playerOne;
     
+    // function for switching the current active player
     const switchPlayer = () => {
         if(activePlayer == playerOne) {
             activePlayer = playerTwo;
@@ -106,18 +119,25 @@ const flowControl = (() => {
         }
     }
     
+    // function for marking the selected board spot
     const addMark = (e) => {
         let targetedDiv = e.target;
+        // check if the selected spot is unoccupied
         if(targetedDiv.textContent == "") {
+            // update the array holding the board with the active player's mark
             gameboard.updateBoardArray(targetedDiv.id, activePlayer.getMark());
             gameboard.renderBoard();
             gameboard.winnerCheck();
-            console.log(gamemode);
-            // idk why the mode keeps switching back to pvp even when pvc is on
+            // if it's pvp, switch to the other player
+            // if it's pvc, make the AI decision
+            /* THIS NEEDS SOME WORK */
             if(gamemode = "PLAYER VS PLAYER") {
                 switchPlayer();
             } else if(gamemode == "PLAYER VS COMPUTER") {
-                aiModule.makemove();
+                ai.makemove();
+                    gameboard.renderBoard();
+                    console.log(gameboard.winnerCheck());
+                    gameboard.printBoard();
             }
         }
     }
@@ -131,15 +151,17 @@ const flowControl = (() => {
     return {addMark, newGame};
 })();
 
-const aiModule = (() => {
+// AI module to control the behaviour in the pvc mode
+/* THIS NEEDS SOME WORK */
+const ai = (() => {
+    // function to make a move by AI
     const makemove = () => {
         let availableSpots = gameboard.availableSpots();
         let selectedSpotIndex = availableSpots[Math.floor(Math.random() * availableSpots.length)];
         gameboard.updateBoardArray(selectedSpotIndex, "O");
-        return availableSpots;
     }
     return {makemove};
-})()
+})();
 
 
 gameSpots.forEach(spot => spot.addEventListener("click", flowControl.addMark));
